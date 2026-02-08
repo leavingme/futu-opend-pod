@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  futu-opend:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: futu-opend
+    image: futu-opend:latest
+    
+    # 使用 Podman Secrets (推荐,更安全)
+    secrets:
+      - futu_account_id
+      - futu_account_pwd
+    
+    # 端口映射
+    ports:
+      - "${API_PORT:-11111}:11111"
+      - "${TELNET_PORT:-22222}:22222"
+    
+    # 挂载卷
+    volumes:
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./logs:/app/logs
+    
+    # 重启策略
+    restart: unless-stopped
+    
+    # 标准输入保持打开 (用于交互式验证码输入)
+    stdin_open: true
+    tty: true
+    
+    # 网络模式
+    network_mode: bridge
+
+# 定义 secrets
+secrets:
+  futu_account_id:
+    external: true
+  futu_account_pwd:
+    external: true

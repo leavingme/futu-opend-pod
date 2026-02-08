@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FTOpenDCfg>
+    <!-- 监听IP,默认127.0.0.1,如需外部访问请改为0.0.0.0 -->
+    <listen_ip>0.0.0.0</listen_ip>
+    
+    <!-- API端口 -->
+    <api_port>11111</api_port>
+    
+    <!-- Telnet端口,用于输入验证码 -->
+    <telnet_port>22222</telnet_port>
+    
+    <!-- 登录账号,支持环境变量 ${FUTU_ACCOUNT_ID} -->
+    <login_account>${FUTU_ACCOUNT_ID}</login_account>
+    
+    <!-- 登录密码,支持明文或MD5密文,支持环境变量 ${FUTU_ACCOUNT_PWD} -->
+    <login_pwd_md5>${FUTU_ACCOUNT_PWD}</login_pwd_md5>
+    
+    <!-- RSA私钥文件路径,用于API协议加密 -->
+    <rsa_private_key>/app/config/futu.pem</rsa_private_key>
+    
+    <!-- OpenD语言设置: 0=英文, 1=简体中文, 2=繁体中文 -->
+    <lang>1</lang>
+    
+    <!-- 日志等级: no/debug/info/warning/error -->
+    <log_level>info</log_level>
+    
+    <!-- 日志保留天数 -->
+    <log_retain_days>7</log_retain_days>
+    
+    <!-- API推送协议格式: 0=Protobuf, 1=Json -->
+    <push_proto_type>0</push_proto_type>
+    
+    <!-- 是否启用加密: 0=不加密, 1=加密 -->
+    <encrypt_algo>1</encrypt_algo>
+    
+    <!-- 是否启用HTTPS: 0=HTTP, 1=HTTPS -->
+    <https>0</https>
+    
+    <!-- 客户端超时时间(秒) -->
+    <client_timeout>300</client_timeout>
+    
+    <!-- 是否启用自动重连 -->
+    <auto_reconn>1</auto_reconn>
+    
+    <!-- 重连间隔(秒) -->
+    <reconn_interval>30</reconn_interval>
+</FTOpenDCfg>

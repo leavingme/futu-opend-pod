@@ -1,0 +1,23 @@
+# Git 忽略文件
+
+# 配置和数据目录
+config/
+data/
+logs/
+
+# 临时文件
+*.log
+*.tmp
+*.bak
+
+# IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Podman/Docker
+*.tar
