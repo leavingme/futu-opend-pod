@@ -10,7 +10,23 @@ Error: initializing source docker://ubuntu:22.04: pinging container registry reg
 Get "https://registry-1.docker.io/v2/": dial tcp 103.42.176.244:443: connect: connection refused
 ```
 
+或者在 `apt-get install` 步骤卡住:
+```
+Get:12 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+# 进度条长时间不动或速度极慢
+```
+
 ### 解决方案
+
+#### 🚀 自动优化 (已包含在最新版中)
+
+我们已经优化了 `Containerfile`,会自动将 Ubuntu 软件源替换为腾讯云内网源:
+```dockerfile
+RUN sed -i 's/archive.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list
+```
+
+这意味着您通常不需要手动处理此问题,只要拉取最新代码即可。
 
 #### 方案 1: 配置 Podman 镜像加速器(推荐)
 

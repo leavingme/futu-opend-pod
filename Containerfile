@@ -5,8 +5,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
 
-# 安装必要的依赖
-RUN apt-get update && apt-get install -y \
+# 安装必要的依赖 (使用腾讯云镜像源加速)
+RUN sed -i 's/archive.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
+    apt-get update && apt-get install -y \
     wget \
     telnet \
     ca-certificates \
