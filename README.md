@@ -116,7 +116,17 @@ chmod +x init.sh
 ./init.sh
 ```
 
-### 5. 配置 Podman Secrets
+### 5. 配置镜像加速器(腾讯云用户推荐)
+
+如果您在腾讯云服务器上运行,建议先配置镜像源以加速构建:
+
+```bash
+# 自动配置腾讯云内网镜像源
+chmod +x config_tencent_mirror.sh
+./config_tencent_mirror.sh
+```
+
+### 6. 配置 Podman Secrets
 
 ```bash
 # 交互式配置账号和密码
@@ -259,6 +269,8 @@ sudo systemctl start futu-opend
 6. **网络限制**: 如果只在本地使用,将 `FutuOpenD.xml` 中的 `ip` 改为 `127.0.0.1`
 
 ## 🐛 故障排查
+
+> **📖 详细故障排除指南**: 如遇到网络连接、镜像拉取等问题,请查看 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
 
 ### Podman 警告信息
 
