@@ -10,10 +10,7 @@
     <!-- API接口协议监听端口 -->
     <api_port>11111</api_port>
 
-    <!-- Telnet监听地址 -->
-    <!-- 默认是127.0.0.1，容器中需要设置为0.0.0.0 -->
-    <telnet_ip>0.0.0.0</telnet_ip>
-    
+
     <!-- 登录帐号 -->
     <!-- 登录账号可以是用户ID，手机号，邮箱，其中手机号格式为：+86 13800138000 -->
     <login_account>${FUTU_ACCOUNT_ID}</login_account>
@@ -36,6 +33,10 @@
     <!-- Telnet监听端口 -->
     <!-- Telnet listening port -->
     <telnet_port>22222</telnet_port>
+
+    <!-- Telnet监听地址 -->
+    <!-- 默认是127.0.0.1，容器中需要设置为0.0.0.0 -->
+    <telnet_ip>0.0.0.0</telnet_ip>
     
     <!-- API协议加密私钥文件路径,不设置则不加密 -->
     <!-- File path for private key for API protocol enctyption. If not set, it will not be encrypted. -->
