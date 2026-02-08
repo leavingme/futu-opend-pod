@@ -93,7 +93,10 @@ sudo su - futu-opend
 
 > **💡 说明**: 
 > - `useradd` 创建的用户默认没有密码,处于锁定状态
-> - `enable-linger` 启用用户服务持久化,消除 Podman systemd 警告
+> - `enable-linger` 启用用户 systemd 会话持久化:
+>   - 允许用户服务在登出后继续运行
+>   - 让 Podman 可以使用 systemd 管理 cgroup(而非降级到 cgroupfs)
+>   - 消除 "no systemd user session available" 警告
 > - 使用 `sudo su - futu-opend` 切换用户不需要密码
 > - 只有需要直接 SSH 登录该用户时才需要设置密码
 
