@@ -4,9 +4,64 @@
 
 ## 📋 前置要求
 
-- Podman 已安装
-- podman-compose 已安装
-- 有效的富途证券账号
+### 必需软件
+
+- **Podman**: 容器运行时
+- **podman-compose**: 容器编排工具
+- **有效的富途证券账号**
+
+### 安装 Podman 和 podman-compose
+
+#### macOS
+
+```bash
+# 使用 Homebrew 安装 Podman
+brew install podman
+
+# 初始化 Podman 虚拟机
+podman machine init
+podman machine start
+
+# 安装 podman-compose
+brew install podman-compose
+```
+
+#### Ubuntu/Debian
+
+```bash
+# 安装 Podman
+sudo apt-get update
+sudo apt-get install -y podman
+
+# 安装 podman-compose
+sudo apt-get install -y podman-compose
+
+# 或使用 pip 安装最新版本
+pip3 install podman-compose
+```
+
+#### CentOS/RHEL/Fedora
+
+```bash
+# 安装 Podman (通常已预装)
+sudo dnf install -y podman
+
+# 安装 podman-compose
+sudo dnf install -y podman-compose
+
+# 或使用 pip 安装
+pip3 install podman-compose
+```
+
+#### 验证安装
+
+```bash
+# 检查 Podman 版本
+podman --version
+
+# 检查 podman-compose 版本
+podman-compose --version
+```
 
 ## ⚠️ 重要安全须知
 
@@ -203,14 +258,25 @@ futu-opend-pod/
 
 ### FutuOpenD.xml 主要配置项
 
-- `listen_ip`: 监听 IP,默认 0.0.0.0(允许外部访问)
-- `api_port`: API 端口,默认 11111
-- `telnet_port`: Telnet 端口,默认 22222
-- `login_account`: 登录账号(从环境变量读取)
-- `login_pwd_md5`: 登录密码(从环境变量读取,支持明文或MD5)
-- `rsa_private_key`: RSA 私钥路径
-- `lang`: 语言设置(0=英文, 1=简体中文, 2=繁体中文)
-- `log_level`: 日志级别(no/debug/info/warning/error)
+#### 基础参数
+- `ip`: 监听 IP,默认 `127.0.0.1`,容器中设置为 `0.0.0.0` 允许外部访问
+- `api_port`: API 端口,默认 `11111`
+- `telnet_port`: Telnet 端口,默认 `22222`
+- `login_account`: 登录账号(从 Podman Secrets 读取)
+- `login_pwd_md5`: 登录密码,支持明文或 MD5(从 Podman Secrets 读取)
+- `lang`: 语言设置(`en`=英文, `chs`=简体中文)
+
+#### 进阶参数
+- `log_level`: 日志级别(`no`, `debug`, `info`, `warning`, `error`, `fatal`)
+- `push_proto_type`: API 推送协议格式(`0`=Protobuf, `1`=JSON)
+- `rsa_private_key`: RSA 私钥路径,用于 API 协议加密
+- `price_reminder_push`: 是否接收到价提醒推送(`0`=否, `1`=是)
+- `auto_hold_quote_right`: 被踢后是否自动抢权限(`0`=否, `1`=是)
+- `future_trade_api_time_zone`: 期货交易 API 时区(如 `UTC+8`)
+
+#### 美股交易保护参数
+- `pdt_protection`: 防止被标记为日内交易者(`0`=否, `1`=是)
+- `dtcall_confirmation`: 日内交易保证金追缴预警(`0`=否, `1`=是)
 
 ### Podman Secrets
 
