@@ -24,7 +24,7 @@ podman-compose build
 
 # 启动容器
 echo "正在启动 Futu OpenD 容器..."
-podman-compose up -d
+podman-compose up -d --force-recreate
 
 echo ""
 echo "========================================="
