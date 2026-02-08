@@ -81,6 +81,9 @@ podman-compose --version
 # 创建专用用户
 sudo useradd -m -s /bin/bash futu-opend
 
+# 启用 lingering (消除 Podman 警告)
+sudo loginctl enable-linger futu-opend
+
 # 设置密码(可选,如果需要直接登录该用户)
 sudo passwd futu-opend
 
@@ -90,6 +93,7 @@ sudo su - futu-opend
 
 > **💡 说明**: 
 > - `useradd` 创建的用户默认没有密码,处于锁定状态
+> - `enable-linger` 启用用户服务持久化,消除 Podman systemd 警告
 > - 使用 `sudo su - futu-opend` 切换用户不需要密码
 > - 只有需要直接 SSH 登录该用户时才需要设置密码
 
@@ -255,25 +259,16 @@ sudo systemctl start futu-opend
 
 ### Podman 警告信息
 
-如果看到以下警告(不影响功能):
+如果仍然看到 systemd/cgroup 警告:
 ```
 WARN[0000] The cgroupv2 manager is set to systemd but there is no systemd user session available
-WARN[0000] Falling back to --cgroup-manager=cgroupfs
 ```
 
-**原因**: 使用 `sudo su -` 切换用户时没有完整的 systemd 会话
+**原因**: 未运行 `loginctl enable-linger` 或需要重新登录用户
 
-**解决方法**(可选):
-```bash
-# 启用 lingering,让用户服务在登出后继续运行
-sudo loginctl enable-linger futu-opend
+**解决**: 参考安装步骤中的"创建专用用户"章节
 
-# 然后重新登录该用户
-exit
-sudo su - futu-opend
-```
-
-> **💡 说明**: 这个警告不影响容器运行,只是 Podman 会使用 cgroupfs 而非 systemd 管理 cgroup。如果不介意警告信息,可以忽略。
+> **💡 说明**: 这个警告不影响容器运行,Podman 会自动使用 cgroupfs 管理。
 
 ### 容器无法启动
 
