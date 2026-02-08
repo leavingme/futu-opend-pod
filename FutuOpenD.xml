@@ -1,47 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <futu_opend>
-    <!-- 监听IP,默认127.0.0.1,如需外部访问请改为0.0.0.0 -->
-    <listen_ip>0.0.0.0</listen_ip>
+    <!-- 基础参数 -->
+    <!-- Basic parameters -->
     
-    <!-- API端口 -->
+    <!-- 协议监听地址,不填默认127.0.0.1 -->
+    <!-- 容器环境中设置为 0.0.0.0 以允许外部访问 -->
+    <ip>0.0.0.0</ip>
+    
+    <!-- API接口协议监听端口 -->
     <api_port>11111</api_port>
     
-    <!-- Telnet端口,用于输入验证码 -->
-    <telnet_port>22222</telnet_port>
-    
-    <!-- 登录账号,支持环境变量 ${FUTU_ACCOUNT_ID} -->
+    <!-- 登录帐号 -->
+    <!-- 登录账号可以是用户ID，手机号，邮箱，其中手机号格式为：+86 13800138000 -->
     <login_account>${FUTU_ACCOUNT_ID}</login_account>
     
-    <!-- 登录密码,支持明文或MD5密文,支持环境变量 ${FUTU_ACCOUNT_PWD} -->
+    <!-- 登录密码32位MD5加密16进制 -->
     <login_pwd_md5>${FUTU_ACCOUNT_PWD}</login_pwd_md5>
     
-    <!-- RSA私钥文件路径,用于API协议加密 -->
-    <rsa_private_key>/app/config/futu.pem</rsa_private_key>
+    <!-- FutuOpenD语言，en：英文，chs：简体中文 -->
+    <lang>chs</lang>
     
-    <!-- OpenD语言设置: 0=英文, 1=简体中文, 2=繁体中文 -->
-    <lang>1</lang>
+    <!-- 进阶参数 -->
+    <!-- Advanced parameters -->
     
-    <!-- 日志等级: no/debug/info/warning/error -->
+    <!-- FutuOpenD日志等级，no, debug, info, warning, error, fatal -->
     <log_level>info</log_level>
     
-    <!-- 日志保留天数 -->
-    <log_retain_days>7</log_retain_days>
-    
-    <!-- API推送协议格式: 0=Protobuf, 1=Json -->
+    <!-- API推送协议格式，0：pb, 1：json -->
     <push_proto_type>0</push_proto_type>
     
-    <!-- 是否启用加密: 0=不加密, 1=加密 -->
-    <encrypt_algo>1</encrypt_algo>
+    <!-- Telnet监听端口 -->
+    <!-- Telnet listening port -->
+    <telnet_port>22222</telnet_port>
     
-    <!-- 是否启用HTTPS: 0=HTTP, 1=HTTPS -->
-    <https>0</https>
+    <!-- API协议加密私钥文件路径,不设置则不加密 -->
+    <!-- File path for private key for API protocol enctyption. If not set, it will not be encrypted. -->
+    <rsa_private_key>/app/config/futu.pem</rsa_private_key>
     
-    <!-- 客户端超时时间(秒) -->
-    <client_timeout>300</client_timeout>
+    <!-- 是否接收到价提醒推送，0：不接收，1：接收 -->
+    <!-- Whether to receive the price reminder push. 0: not receive, 1: receive -->
+    <price_reminder_push>1</price_reminder_push>
     
-    <!-- 是否启用自动重连 -->
-    <auto_reconn>1</auto_reconn>
+    <!-- 被踢后是否自动抢权限，0：否，1：是 -->
+    <!-- 开启该选项后，要想在其他终端上获取行情权限需要在10秒连续踢FutuOpenD两次行情权限（终端登录算一次） -->
+    <auto_hold_quote_right>0</auto_hold_quote_right>
     
-    <!-- 重连间隔(秒) -->
-    <reconn_interval>30</reconn_interval>
+    <!-- 指定期货交易 API 时区，期货账户调用交易 API 时，涉及的时间按照此时区规则。期货交易必须配置此字段 -->
+    <!-- UTC：0时区，UTC+1：东一区，UTC+2：东二区，......，UTC+11：东十一区，UTC+12：东十二区，UTC-11：西十一区，......，UTC-1：西一区 -->
+    <future_trade_api_time_zone>UTC+8</future_trade_api_time_zone>
+    
+    <!-- FUTU US 专用参数 -->
+    <!-- Specific parameters for FUTU US -->
+    
+    <!-- 是否开启 防止被标记为日内交易者 的功能, 0：否，1：是-->
+    <!-- 开启功能后，我们会在您将要被标记 PDT 时阻止您的下单，但不确保您一定不被标记。若您被标记 PDT，当您的账户权益小于$25000时，您将无法开仓。-->
+    <!-- Whether to turn on the Pattern Day Trade Protection, 0: No, 1: Yes  -->
+    <pdt_protection>1</pdt_protection>
+    
+    <!-- 是否开启 日内交易保证金追缴预警 的功能, 0：否，1：是 -->
+    <!-- 开启功能后，我们会在您即将开仓下单超出剩余日内交易购买力前阻止您的下单。提醒您当前开仓订单的市值大于您的剩余日内交易购买力，若您在今日平仓当前标的，您将会收到日内交易保证金追缴通知（Day-Trading Call），只能通过存入资金才能解除。 -->
+    <dtcall_confirmation>1</dtcall_confirmation>
 </futu_opend>
