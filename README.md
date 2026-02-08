@@ -253,6 +253,28 @@ sudo systemctl start futu-opend
 
 ## 🐛 故障排查
 
+### Podman 警告信息
+
+如果看到以下警告(不影响功能):
+```
+WARN[0000] The cgroupv2 manager is set to systemd but there is no systemd user session available
+WARN[0000] Falling back to --cgroup-manager=cgroupfs
+```
+
+**原因**: 使用 `sudo su -` 切换用户时没有完整的 systemd 会话
+
+**解决方法**(可选):
+```bash
+# 启用 lingering,让用户服务在登出后继续运行
+sudo loginctl enable-linger futu-opend
+
+# 然后重新登录该用户
+exit
+sudo su - futu-opend
+```
+
+> **💡 说明**: 这个警告不影响容器运行,只是 Podman 会使用 cgroupfs 而非 systemd 管理 cgroup。如果不介意警告信息,可以忽略。
+
 ### 容器无法启动
 
 1. 检查 Podman Secrets 是否已配置: `podman secret ls`
