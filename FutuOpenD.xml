@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FTOpenDCfg>
+<futu_opend>
     <!-- 监听IP,默认127.0.0.1,如需外部访问请改为0.0.0.0 -->
     <listen_ip>0.0.0.0</listen_ip>
     
@@ -44,4 +44,4 @@
     
     <!-- 重连间隔(秒) -->
     <reconn_interval>30</reconn_interval>
-</FTOpenDCfg>
+</futu_opend>
