@@ -144,17 +144,31 @@ chmod +x run.sh
 ./run.sh
 ```
 
-### 7. 输入验证码(如需要)
+### 7. 输入验证码(首次登录必须)
 
-首次登录或特定情况下需要输入手机验证码:
+首次启动或更换设备时,Futu OpenD 会等待输入手机验证码。
+**注意**: 在验证码输入成功前,OpenD **不会监听任何端口**,因此无法使用 Telnet 连接。
+
+必须使用 `podman attach` 直接连接到容器控制台:
 
 ```bash
-# 进入容器的 Telnet 服务
-podman exec -it futu-opend telnet localhost 22222
+# 1. 附着到容器主进程
+podman attach futu-opend
 
-# 输入验证码(将 123456 替换为你收到的验证码)
+# 2. 等待出现 "req_phone_verify_code" 提示
+# 3. 输入验证码命令并回车
 input_phone_verify_code -code=123456
 ```
+
+**⚠️ 重要: 如何安全退出**
+
+输入完成后,**千万不要按 Ctrl+C** (这会杀掉容器)!
+请按顺序按下组合键:
+1. 按住 `Ctrl` 不放,按 `P`
+2. 松开所有键
+3. 按住 `Ctrl` 不放,按 `Q`
+
+这样可以"分离"(Detach)控制台,让容器在后台继续运行。
 
 ## 🔧 常用命令
 

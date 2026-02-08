@@ -227,28 +227,26 @@ ports:
 
 ### 验证码输入失败 / Connection refused
 
-如果连接 Telnet 端口 (22222) 失败 (`Connection refused`):
+**现象**: 容器正在运行,但 Telnet 连接端口 (22222) 失败 (`Connection refused`)。
 
-1. **检查容器是否运行**:
-   ```bash
-   podman ps
-   ```
-   如果列表为空,说明容器因为错误而停止。**必须**查看日志。
+**原因**: **这是正常现象**。Futu OpenD 在登录成功之前不会开启任何端口监听。
 
-2. **查看容器日志 (关键)**:
-   ```bash
-   podman logs futu-opend
-   ```
-   
-   **常见错误原因**:
-   - **Login failed**: 密码错误。如果您在 secrets 中存入的是明文密码,而 OpenD 需要 MD5,会导致登录失败并退出。
-   - **Init failed**: 配置文件格式错误。
-   - **RSA Key error**: 密钥文件权限问题。
+**解决方法**:
 
-3. **检查端口监听**:
-   如果容器正在运行但无法连接,检查容器内端口监听情况:
+不要使用 Telnet,而是直接附着到容器控制台输入验证码:
+
+1. **附着到容器**:
    ```bash
-   podman exec futu-opend ss -tln
+   podman attach futu-opend
    ```
-   确认是否有 `0.0.0.0:22222` 或 `*:22222`。
+
+2. **输入验证码**:
+   当看到 `req_phone_verify_code` 提示时,输入:
+   ```bash
+   input_phone_verify_code -code=123456
+   ```
+
+3. **安全退出 (重要)**:
+   验证成功后,**按顺序**按下 `Ctrl+P` 然后 `Ctrl+Q` 来分离控制台。
+   **切勿按 Ctrl+C**,否则会停止容器。
 
