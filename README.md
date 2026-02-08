@@ -6,31 +6,42 @@
 
 ### Podman Secrets 的安全限制
 
-虽然本项目使用 Podman Secrets 存储密码,但需要了解以下**重要安全事实**:
+本项目使用 Podman Secrets 存储密码,但需要了解以下**重要安全事实**:
 
-> **🔴 关键风险**: Podman Secrets 通过文件权限保护,但**同一用户下运行的其他程序可以读取 secrets**!
+> **🔴 关键限制**: Podman Secrets 通过文件权限保护,但**同一用户下运行的其他程序可以读取 secrets**!
 
-**具体风险**:
+**具体说明**:
 - Podman Secrets 存储在 `~/.local/share/containers/storage/secrets/`
 - 文件权限为 `600` (仅所有者可读)
-- **但同一用户的任何程序都可以读取**
+- 同一用户的任何程序都可以读取这些文件
+- **拥有 sudo 权限的用户可以读取任何用户的 secrets**
 
 **示例场景**:
 ```bash
 # 如果你以 ubuntu 用户运行 OpenD 容器
-# 同时以 ubuntu 用户运行其他程序(如 OpenClaw)
+# 同时以 ubuntu 用户运行其他程序
 # 那么其他程序可以执行:
 cat ~/.local/share/containers/storage/secrets/*
-# 读取到你的富途账号密码!
+
+# 如果该用户有 sudo 权限(如 NOPASSWD sudo)
+# 甚至可以切换到其他用户读取 secrets:
+sudo su - futu-opend
+cat ~/.local/share/containers/storage/secrets/*
 ```
 
-### 🛡️ 安全要求
+### 🛡️ 安全建议
 
-**必须使用专用用户运行容器**:
+**理解风险**:
+- Podman Secrets 比 `.env` 文件更安全,但**不是绝对安全**
+- 在多用户或多程序环境中,需要额外的安全措施
 
-这样其他用户运行的程序**完全无法访问** `futu-opend` 用户的 secrets!
+**推荐做法**:
+1. **使用专用用户运行容器** - 有助于组织管理和基本隔离
+2. **限制 sudo 权限** - 避免 NOPASSWD 配置
+3. **使用富途子账号** - 限制账号权限,降低泄露风险
+4. **真正的隔离** - 如需高安全性,在独立的虚拟机或物理机上运行
 
-> **💡 最佳实践**: 如果你的系统上运行了其他不完全信任的程序,**强烈建议**使用专用用户运行 OpenD 容器。
+> **💡 最佳实践**: Podman Secrets 适合个人开发环境。如果需要生产级安全,考虑使用专业的密钥管理系统(如 HashiCorp Vault)或完全隔离的环境。
 
 ## � 安装和配置
 
