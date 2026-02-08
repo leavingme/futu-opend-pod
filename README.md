@@ -40,19 +40,6 @@ sudo apt-get install -y podman-compose
 pip3 install podman-compose
 ```
 
-#### CentOS/RHEL/Fedora
-
-```bash
-# 安装 Podman (通常已预装)
-sudo dnf install -y podman
-
-# 安装 podman-compose
-sudo dnf install -y podman-compose
-
-# 或使用 pip 安装
-pip3 install podman-compose
-```
-
 #### 验证安装
 
 ```bash
