@@ -71,9 +71,17 @@ podman-compose --version
 # 创建专用用户
 sudo useradd -m -s /bin/bash futu-opend
 
-# 切换到专用用户
+# 设置密码(可选,如果需要直接登录该用户)
+sudo passwd futu-opend
+
+# 切换到专用用户(使用 sudo,不需要密码)
 sudo su - futu-opend
 ```
+
+> **💡 说明**: 
+> - `useradd` 创建的用户默认没有密码,处于锁定状态
+> - 使用 `sudo su - futu-opend` 切换用户不需要密码
+> - 只有需要直接 SSH 登录该用户时才需要设置密码
 
 ### 3. 克隆项目
 
