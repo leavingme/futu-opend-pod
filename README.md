@@ -81,7 +81,7 @@ podman-compose --version
 # 创建专用用户
 sudo useradd -m -s /bin/bash futu-opend
 
-# 启用 lingering (消除 Podman 警告)
+# 启用 lingering (确保服务 7x24 运行,即使 SSH 断开)
 sudo loginctl enable-linger futu-opend
 
 # 设置密码(可选,如果需要直接登录该用户)
