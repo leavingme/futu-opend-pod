@@ -5,7 +5,7 @@ echo ""
 
 # 检查 secrets 是否已存在
 check_secret() {
-    podman secret ls --format "{{.Name}}" | grep -q "^$1$"
+    podman secret ls --format "{{.Name}}" 2>/dev/null | grep -q "^$1$"
 }
 
 # 创建账号 ID secret
@@ -14,14 +14,14 @@ if check_secret "futu_account_id"; then
     read -p "是否要重新创建? (y/N): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        podman secret rm futu_account_id
-        echo "请输入富途账号 ID:"
-        podman secret create futu_account_id -
+        podman secret rm futu_account_id 2>/dev/null
+        read -p "请输入富途账号 ID: " ACCOUNT_ID
+        echo -n "$ACCOUNT_ID" | podman secret create futu_account_id -
         echo "✓ 账号 ID 已更新"
     fi
 else
-    echo "请输入富途账号 ID:"
-    podman secret create futu_account_id -
+    read -p "请输入富途账号 ID: " ACCOUNT_ID
+    echo -n "$ACCOUNT_ID" | podman secret create futu_account_id -
     echo "✓ 账号 ID 已创建"
 fi
 
@@ -33,14 +33,16 @@ if check_secret "futu_account_pwd"; then
     read -p "是否要重新创建? (y/N): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        podman secret rm futu_account_pwd
-        echo "请输入富途账号密码 (输入不会显示):"
-        podman secret create futu_account_pwd -
+        podman secret rm futu_account_pwd 2>/dev/null
+        read -sp "请输入富途账号密码 (输入不会显示): " ACCOUNT_PWD
+        echo
+        echo -n "$ACCOUNT_PWD" | podman secret create futu_account_pwd -
         echo "✓ 密码已更新"
     fi
 else
-    echo "请输入富途账号密码 (输入不会显示):"
-    podman secret create futu_account_pwd -
+    read -sp "请输入富途账号密码 (输入不会显示): " ACCOUNT_PWD
+    echo
+    echo -n "$ACCOUNT_PWD" | podman secret create futu_account_pwd -
     echo "✓ 密码已创建"
 fi
 
