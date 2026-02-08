@@ -1,54 +1,6 @@
 # Futu OpenD Podman 容器
 
-这是一个用于运行富途 OpenD 的 Podman 容器项目,支持通过 Podman Compose 快速部署和管理。
-
-## 📋 前置要求
-
-### 必需软件
-
-- **Podman**: 容器运行时
-- **podman-compose**: 容器编排工具
-- **有效的富途证券账号**
-
-### 安装 Podman 和 podman-compose
-
-#### macOS
-
-```bash
-# 使用 Homebrew 安装 Podman
-brew install podman
-
-# 初始化 Podman 虚拟机
-podman machine init
-podman machine start
-
-# 安装 podman-compose
-brew install podman-compose
-```
-
-#### Ubuntu/Debian
-
-```bash
-# 安装 Podman
-sudo apt-get update
-sudo apt-get install -y podman
-
-# 安装 podman-compose
-sudo apt-get install -y podman-compose
-
-# 或使用 pip 安装最新版本
-pip3 install podman-compose
-```
-
-#### 验证安装
-
-```bash
-# 检查 Podman 版本
-podman --version
-
-# 检查 podman-compose 版本
-podman-compose --version
-```
+这是一个用于运行富途 OpenD 的 Podman 容器项目,支持通过 Podman Compose 快速部署和管理,使用 Podman Secrets 安全存储敏感信息。
 
 ## ⚠️ 重要安全须知
 
@@ -76,29 +28,62 @@ cat ~/.local/share/containers/storage/secrets/*
 
 **必须使用专用用户运行容器**:
 
+这样其他用户运行的程序**完全无法访问** `futu-opend` 用户的 secrets!
+
+> **💡 最佳实践**: 如果你的系统上运行了其他不完全信任的程序,**强烈建议**使用专用用户运行 OpenD 容器。
+
+## � 安装和配置
+
+### 1. 安装 Podman 和 podman-compose
+
+#### macOS
+
+```bash
+# 使用 Homebrew 安装
+brew install podman podman-compose
+
+# 初始化 Podman 虚拟机
+podman machine init
+podman machine start
+```
+
+#### Ubuntu/Debian
+
+```bash
+# 安装 Podman 和 podman-compose
+sudo apt-get update
+sudo apt-get install -y podman podman-compose
+
+# 或使用 pip 安装最新版本的 podman-compose
+pip3 install podman-compose
+```
+
+#### 验证安装
+
+```bash
+podman --version
+podman-compose --version
+```
+
+### 2. 创建专用用户(推荐)
+
 ```bash
 # 创建专用用户
 sudo useradd -m -s /bin/bash futu-opend
 
 # 切换到专用用户
 sudo su - futu-opend
-
-# 在专用用户下配置和运行
-cd ~
-git clone <项目地址>
-cd futu-opend-pod
-./init.sh
-./setup-secrets.sh
-./run.sh
 ```
 
-这样其他用户运行的程序**完全无法访问** `futu-opend` 用户的 secrets!
+### 3. 克隆项目
 
-> **💡 最佳实践**: 如果你的系统上运行了其他不完全信任的程序,**强烈建议**使用专用用户运行 OpenD 容器。
+```bash
+cd ~
+git clone https://github.com/leavingme/futu-opend-pod.git
+cd futu-opend-pod
+```
 
-## 🚀 快速开始
-
-### 1. 初始化项目
+### 4. 初始化项目
 
 ```bash
 # 生成 RSA 密钥和创建必要目录
@@ -106,7 +91,7 @@ chmod +x init.sh
 ./init.sh
 ```
 
-### 2. 配置 Podman Secrets (安全方式)
+### 5. 配置 Podman Secrets
 
 ```bash
 # 交互式配置账号和密码
@@ -114,9 +99,9 @@ chmod +x setup-secrets.sh
 ./setup-secrets.sh
 ```
 
-> **🔐 安全优势**: Podman Secrets 将密码加密存储,不会以明文形式保存在文件系统中,比 `.env` 文件更安全!
+> **🔐 安全优势**: Podman Secrets 将密码加密存储,不会以明文形式保存在文件系统中。
 
-### 3. 启动容器
+### 6. 启动容器
 
 ```bash
 # 构建并启动容器
@@ -124,70 +109,7 @@ chmod +x run.sh
 ./run.sh
 ```
 
-## 🏭 生产环境最佳实践
-
-### 创建专用用户(必须!)
-
-> **🔴 重要**: 如果你的系统上运行了其他程序,**必须**使用专用用户运行容器,否则其他程序可以读取你的富途账号密码!
-
-在生产服务器或多程序环境中,创建专用用户运行容器:
-
-```bash
-# 1. 创建专用用户
-sudo useradd -m -s /bin/bash futu-opend
-
-# 2. 切换到该用户
-sudo su - futu-opend
-
-# 3. 克隆项目
-cd ~
-git clone <项目地址>
-cd futu-opend-pod
-
-# 4. 按照快速开始步骤配置和运行
-./init.sh
-./setup-secrets.sh
-./run.sh
-```
-
-### 安全加固建议
-
-1. **用户隔离**: 使用专用用户运行,遵循最小权限原则
-2. **防火墙配置**: 只开放必要的端口(11111, 22222)
-3. **定期更新**: 定期更新 OpenD 版本和系统补丁
-4. **日志监控**: 监控 `logs/` 目录中的日志文件
-5. **备份策略**: 定期备份 `config/` 和 `data/` 目录
-6. **网络限制**: 如果只在本地使用,将 `FutuOpenD.xml` 中的 `listen_ip` 改为 `127.0.0.1`
-
-### 系统服务配置(可选)
-
-使用 systemd 管理容器自动启动:
-
-```bash
-# 创建 systemd 服务文件
-sudo tee /etc/systemd/system/futu-opend.service << EOF
-[Unit]
-Description=Futu OpenD Container
-After=network.target
-
-[Service]
-Type=forking
-User=futu-opend
-WorkingDirectory=/home/futu-opend/futu-opend-pod
-ExecStart=/home/futu-opend/futu-opend-pod/run.sh
-ExecStop=/usr/bin/podman-compose down
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# 启用并启动服务
-sudo systemctl enable futu-opend
-sudo systemctl start futu-opend
-```
-
-## 📝 验证码输入
+### 7. 输入验证码(如需要)
 
 首次登录或特定情况下需要输入手机验证码:
 
@@ -259,53 +181,63 @@ futu-opend-pod/
 - `pdt_protection`: 防止被标记为日内交易者(`0`=否, `1`=是)
 - `dtcall_confirmation`: 日内交易保证金追缴预警(`0`=否, `1`=是)
 
-### Podman Secrets
+### Podman Secrets 管理
 
-项目使用 Podman Secrets 安全存储敏感信息:
-
-- `futu_account_id`: 富途账号 ID
-- `futu_account_pwd`: 富途账号密码(明文或MD5)
-
-**管理 Secrets**:
 ```bash
 # 查看已创建的 secrets
 podman secret ls
 
 # 删除 secret
-podman secret rm futu_account_id
-podman secret rm futu_account_pwd
+podman secret rm futu_account_id futu_account_pwd
 
 # 重新配置
 ./setup-secrets.sh
 ```
 
-## 🔐 安全特性
+## 🏭 生产环境部署
 
-### 1. Podman Secrets (推荐)
+### 系统服务配置(可选)
 
-✅ **已默认启用**: 项目使用 Podman Secrets 加密存储敏感信息
-- 密码不会以明文形式存储在文件系统
-- 自动加密,防止泄露
-- 符合生产环境安全标准
+使用 systemd 管理容器自动启动:
 
-### 2. 其他安全措施
+```bash
+# 创建 systemd 服务文件
+sudo tee /etc/systemd/system/futu-opend.service << EOF
+[Unit]
+Description=Futu OpenD Container
+After=network.target
 
-1. **密码加密**: 可以使用 MD5 加密后的密码
-   ```bash
-   echo -n "your_password" | md5
-   ```
+[Service]
+Type=forking
+User=futu-opend
+WorkingDirectory=/home/futu-opend/futu-opend-pod
+ExecStart=/home/futu-opend/futu-opend-pod/run.sh
+ExecStop=/usr/bin/podman-compose down
+Restart=on-failure
 
-2. **网络隔离**: 如果只在本地使用,可以将 `listen_ip` 改为 `127.0.0.1`
+[Install]
+WantedBy=multi-user.target
+EOF
 
-3. **密钥保护**: RSA 私钥自动设置权限为 600
+# 启用并启动服务
+sudo systemctl enable futu-opend
+sudo systemctl start futu-opend
+```
 
-4. **容器隔离**: OpenD 运行在容器内,无法访问宿主机敏感文件
+### 安全加固建议
+
+1. **用户隔离**: 使用专用用户运行,遵循最小权限原则
+2. **防火墙配置**: 只开放必要的端口(11111, 22222)
+3. **定期更新**: 定期更新 OpenD 版本和系统补丁
+4. **日志监控**: 监控 `logs/` 目录中的日志文件
+5. **备份策略**: 定期备份 `config/` 和 `data/` 目录
+6. **网络限制**: 如果只在本地使用,将 `FutuOpenD.xml` 中的 `ip` 改为 `127.0.0.1`
 
 ## 🐛 故障排查
 
 ### 容器无法启动
 
-1. 检查 `.env` 文件是否存在且配置正确
+1. 检查 Podman Secrets 是否已配置: `podman secret ls`
 2. 检查 `config/futu.pem` 是否存在
 3. 查看容器日志: `podman-compose logs`
 
