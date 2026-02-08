@@ -32,6 +32,14 @@ if [ ! -f "/app/config/futu.pem" ]; then
 fi
 
 # 显示启动信息
+# 检查 OpenD 可执行文件是否存在
+if [ ! -f "/app/FutuOpenD" ]; then
+    echo "错误: /app/FutuOpenD 可执行文件不存在!"
+    echo "当前目录结构:"
+    ls -R /app
+    exit 1
+fi
+
 echo "========================================="
 echo "Futu OpenD 容器启动中..."
 echo "========================================="
@@ -39,10 +47,8 @@ echo "账号: $FUTU_ACCOUNT_ID"
 echo "API 端口: 11111"
 echo "Telnet 端口: 22222 (用于输入验证码)"
 echo ""
-echo "如需输入验证码,请使用以下命令:"
-echo "  podman exec -it futu-opend telnet localhost 22222"
-echo "  然后输入: input_phone_verify_code -code=<验证码>"
-echo "========================================="
+echo "正在启动: /app/FutuOpenD"
+echo "配置文件: /app/FutuOpenD.xml"
 echo ""
 
 # 启动 FTOpenD

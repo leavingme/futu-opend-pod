@@ -24,7 +24,7 @@
     <!-- Advanced parameters -->
     
     <!-- FutuOpenD日志等级，no, debug, info, warning, error, fatal -->
-    <log_level>info</log_level>
+    <log_level>debug</log_level>
     
     <!-- API推送协议格式，0：pb, 1：json -->
     <push_proto_type>0</push_proto_type>
